@@ -8,3 +8,4 @@ recursive-include .github *.yml
 include scripts/export_release.py
 global-exclude __pycache__ *.py[cod]
 exclude README.zh-CN.md
+exclude tests/test_analysis.py tests/test_stotopic_ablation.py

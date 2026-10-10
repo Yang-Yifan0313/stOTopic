@@ -21,3 +21,5 @@ dist/
 outputs/
 *.h5ad
 README.zh-CN.md
+/tests/test_analysis.py
+/tests/test_stotopic_ablation.py
