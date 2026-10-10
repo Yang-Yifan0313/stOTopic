@@ -1,0 +1,10 @@
+include .gitignore
+include README.md pyproject.toml stOTopic_main.py
+recursive-include stotopic *.py
+recursive-include examples *.py
+recursive-include tutorials *.ipynb *.md
+recursive-include tests *.py
+recursive-include .github *.yml
+include scripts/export_release.py
+global-exclude __pycache__ *.py[cod]
+exclude README.zh-CN.md
