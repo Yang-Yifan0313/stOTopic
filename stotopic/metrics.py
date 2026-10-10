@@ -26,6 +26,15 @@ def get_topic_diversity(beta, topk=20, p=0.9):
         result[j] = min(result[j], dissimilarity)
     return result.tolist()
 
+def get_topic_redundancy(beta, topk=20):
+    topics = _top_genes(beta, topk)
+    if len(topics) < 2:
+        raise ValueError('At least two topics are required')
+    if topk > len(beta):
+        raise ValueError(f'topk={topk} exceeds n_genes={len(beta)}')
+    sets = [set(genes) for genes in topics]
+    return float(np.mean([len(a & b) for a, b in combinations(sets, 2)]))
+
 def get_topic_coherence(adata, beta, layer=None, topk=20, quantile=0.75, individual=False):
     topics = _top_genes(beta, topk)
     if not 0 <= quantile <= 1 or adata.n_obs == 0:

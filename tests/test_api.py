@@ -64,6 +64,21 @@ def test_metrics_known_values_and_sparse_dense_parity():
     assert metrics.get_topic_coherence(universal, beta) == 0
     assert metrics.get_topic_diversity(beta.iloc[:, :1]) == [1]
 
+def test_topic_redundancy_overlap_and_validation():
+    beta = pd.DataFrame({'A': [4, 3, 2, 1], 'B': [2, 4, 3, 1], 'C': [1, 2, 4, 3]}, index=['a', 'b', 'c', 'd'])
+    assert metrics.get_topic_redundancy(beta, topk=2) == pytest.approx(2 / 3)
+    assert metrics.get_topic_redundancy(beta[['C', 'A', 'B']], topk=2) == pytest.approx(2 / 3)
+    assert metrics.get_topic_redundancy(beta[['A', 'C']], topk=2) == 0
+    repeated = pd.concat([beta['A']] * 2, axis=1)
+    repeated.columns = ['A', 'B']
+    assert metrics.get_topic_redundancy(repeated, topk=2) == 2
+    with pytest.raises(ValueError, match='At least two'):
+        metrics.get_topic_redundancy(beta[['A']], topk=2)
+    with pytest.raises(ValueError, match='exceeds'):
+        metrics.get_topic_redundancy(beta, topk=5)
+    with pytest.raises(ValueError, match='positive integer'):
+        metrics.get_topic_redundancy(beta, topk=0)
+
 def test_spatial_alignment_percentile_orientation_and_no_mutation(tmp_path):
     data = make_demo_data()
     weights = np.random.default_rng(0).random((data.n_obs, 2))
